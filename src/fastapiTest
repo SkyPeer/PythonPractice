@@ -1,0 +1,13 @@
+# for run
+# uvicorn fastapiTest:app --reload
+# uvicorn fastapiTest:app --port 3000
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+items = [1,2,3]
+
+@app.get("/")
+async def root():
+    return items
