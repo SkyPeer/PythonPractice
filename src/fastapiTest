@@ -15,7 +15,21 @@ items = [1, 2, 3]
 async def root():
     return items
 
+
+@app.get("/html", response_class=HTMLResponse)
+async def read_items():
+    return """
+    <html>
+        <head>
+            <title>Python TestServer Page</title>
+        </head>
+        <body>
+            <h1>Python TestServer Page</h1>
+        </body>
+    </html>
+    """
+
 # response_status = 307 Temporary redirect
 @app.get("/redirect", response_class=RedirectResponse)
 async def redirect_fastapi():
-    return "http://localhost:3000/html" 
+    return "http://localhost:3000/html"
