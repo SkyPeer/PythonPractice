@@ -2,21 +2,24 @@
 # uvicorn fastapiTest:app --reload
 # uvicorn fastapiTest:app --port 3000
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, Request
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
 items = [1, 2, 3]
 
 
+templates = Jinja2Templates(directory="html")
+
 @app.get("/")
 async def root():
     return items
 
 
-@app.get("/html", response_class=HTMLResponse)
+@app.get("/html-custom", response_class=HTMLResponse)
 async def read_items():
     return """
     <html>
@@ -33,3 +36,8 @@ async def read_items():
 @app.get("/redirect", response_class=RedirectResponse)
 async def redirect_fastapi():
     return "http://localhost:3000/html"
+
+@app.get('/html')
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
