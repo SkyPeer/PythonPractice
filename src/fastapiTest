@@ -1,11 +1,14 @@
 # for run
 # uvicorn fastapiTest:app --reload
 # uvicorn fastapiTest:app --port 3000
+# https://requests.readthedocs.io/en/latest/
 
 from fastapi import FastAPI, Response, Request
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+import requests
+import test
 
 app = FastAPI()
 
@@ -14,7 +17,7 @@ items = [1, 2, 3]
 
 templates = Jinja2Templates(directory="html")
 
-@app.get("/")
+@app.get("/data")
 async def root():
     return items
 
@@ -38,6 +41,17 @@ async def redirect_fastapi():
     return "http://localhost:3000/html"
 
 @app.get('/html')
-def index(request: Request):
+def htmlTemplate(request: Request):
+    # test.foo('123')
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get('/api')
+def api_data(request: Request):
+    # test.foo('123')
+    response = requests.get('http://localhost:3000/data')
+    print('Status', response.status_code)
+    print('Data', response.json())
+    data = response.json()
+    return data
 
