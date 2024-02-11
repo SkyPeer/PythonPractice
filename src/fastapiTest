@@ -2,20 +2,28 @@
 # uvicorn fastapiTest:app --reload
 # uvicorn fastapiTest:app --port 3000
 # https://requests.readthedocs.io/en/latest/
+# sys.getrefcount(object) // return links(refs) on object
 
 from fastapi import FastAPI, Response, Request
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+import time, threading
 import requests
 import test
+from threading import Thread, Timer
+import asyncio
+
 
 app = FastAPI()
 
-items = [1, 2, 3]
+items = [1, 2, 3, 'aaa', 'bbb', 'ccc']
 
 
 templates = Jinja2Templates(directory="html")
+
+def hello(data):
+    print('Hello World after timeout', data)
 
 @app.get("/data")
 async def root():
@@ -48,10 +56,17 @@ def htmlTemplate(request: Request):
 
 @app.get('/api')
 def api_data(request: Request):
-    # test.foo('123')
     response = requests.get('http://localhost:3000/data')
-    print('Status', response.status_code)
-    print('Data', response.json())
     data = response.json()
+
+    def testtimer():
+        print('print test')
+        return data
+
+    t = Timer(10.0, testtimer)
+    t.start()  # after 30 seconds, "hello, world" will be printed
+    # await asyncio.sleep(5)
     return data
 
+# print('globals', globals()) // All global variables
+# print('locals', locals()) // All local variables
