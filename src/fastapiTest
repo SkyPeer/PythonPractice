@@ -2,7 +2,7 @@
 # uvicorn fastapiTest:app --reload
 # uvicorn fastapiTest:app --port 3000
 # https://requests.readthedocs.io/en/latest/
-# sys.getrefcount(object) // return links(refs) on object
+# sys.getrefcount(object) //  return links(refs) on object
 
 from fastapi import FastAPI, Response, Request
 from fastapi.responses import HTMLResponse
